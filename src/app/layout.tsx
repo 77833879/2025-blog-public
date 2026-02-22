@@ -1,35 +1,58 @@
-import "./globals.css";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import '@/styles/globals.css'
 
-const inter = Inter({ subsets: ["latin"] });
+import type { Metadata } from 'next'
+import Layout from '@/layout'
+import Head from '@/layout/head'
+import siteContent from '@/config/site-content.json'
+
+const {
+	meta: { title, description },
+	theme
+} = siteContent
 
 export const metadata: Metadata = {
-  title: "我的博客",
-  description: "https://img-api.moeblock.com/api.php",
-};
+	title,
+	description,
+	openGraph: {
+		title,
+		description
+	},
+	twitter: {
+		title,
+		description
+	}
+}
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="zh-CN">
-      <body
-        className={inter.className}
-        style={{
-          minHeight: "100vh",
-          backgroundImage: `url(https://api.good9.top/api/wallpaper)`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-          margin: 0,
-          padding: 0,
-        }}
-      >
-        {children}
-      </body>
-    </html>
-  );
+const htmlStyle = {
+	cursor: 'url(/images/cursor.svg) 2 1, auto',
+	'--color-brand': theme.colorBrand,
+	'--color-primary': theme.colorPrimary,
+	'--color-secondary': theme.colorSecondary,
+	'--color-brand-secondary': theme.colorBrandSecondary,
+	'--color-bg': theme.colorBg,
+	'--color-border': theme.colorBorder,
+	'--color-card': theme.colorCard,
+	'--color-article': theme.colorArticle
+}
+
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+	return (
+		<html lang='en' suppressHydrationWarning style={htmlStyle}>
+			<Head />
+
+			<body>
+				<script
+					dangerouslySetInnerHTML={{
+						__html: `
+					if (/windows|win32/i.test(navigator.userAgent)) {
+						document.documentElement.classList.add('windows');
+					}
+		      `
+					}}
+				/>
+
+				<Layout>{children}</Layout>
+			</body>
+		</html>
+	)
 }
